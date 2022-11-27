@@ -1,0 +1,23 @@
+{
+  "template": "https://github.com/opencobra/cookiecutter-python-package",
+  "commit": "627ae858cd55f962cf4599f1d85e048e67251379",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "Moritz E. Beber",
+      "email": "midnighter@posteo.net",
+      "github_username": "Midnighter",
+      "project_name": "Find FASTQ FASTA",
+      "project_slug": "ffqf",
+      "project_module": "ffqf",
+      "project_short_description": "Find FASTQ and FASTA files faster than with ffq.",
+      "release_date": "2022-11-27",
+      "year": "2022",
+      "_extensions": [
+        "jinja2_time.TimeExtension"
+      ],
+      "_template": "https://github.com/opencobra/cookiecutter-python-package"
+    }
+  },
+  "directory": null
+}
