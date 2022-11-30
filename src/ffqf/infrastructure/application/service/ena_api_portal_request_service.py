@@ -1,30 +1,34 @@
 from functools import partial
-from typing import List
+from typing import List, cast
 
 import aiometer
 import httpx
-import pydantic
 
 from ffqf.application.service import RequestService
+from .ena_api_portal_settings import ENAAPIPortalSettings
 
 
 class ENAAPIPortalRequestService(RequestService):
-    def __init__(self, *, settings: pydantic.BaseSettings, **kwargs) -> None:
+    def __init__(self, *, settings: ENAAPIPortalSettings, **kwargs) -> None:
         """"""
         super().__init__(settings=settings, **kwargs)
+        self._client = httpx.AsyncClient(
+            base_url=self.settings.api_url, timeout=self.settings.timeout
+        )
+
+    @property
+    def settings(self) -> ENAAPIPortalSettings:
+        """"""
+        return cast(ENAAPIPortalSettings, self._settings)
 
     async def perform_requests(
         self, requests: List[httpx.Request]
     ) -> List[httpx.Response]:
         """"""
-        async with httpx.AsyncClient(
-            # TODO: use settings here
-        ) as client:
-            # We want to get responses in order such that we can process them in the
-            # right way in that order again.
-            # TODO: possibly modify request headers to inject headers etc.
-            results = await aiometer.run_all(
-                [partial(self._make_request, client, r) for r in requests],
-                # TODO: apply further settings here
-            )
-        return results
+        # We want to get responses in order such that we can process them in the
+        # right way in that order again.
+        return await aiometer.run_all(
+            [partial(self._make_request, self.client, r) for r in requests],
+            max_at_once=self.settings.concurrency,
+            max_per_second=self.settings.concurrency,
+        )

@@ -22,6 +22,7 @@
 # SOFTWARE.
 
 
+import logging
 from typing import List
 
 import httpx
@@ -30,6 +31,11 @@ from pydantic import parse_obj_as
 
 from ffqf.application.service import MappingService
 from ffqf.domain.model import INSDCSubmissionSet, INSDCRunSet
+
+from .ena_api_portal_request_service import ENAAPIPortalRequestService
+
+
+logger = logging.getLogger(__name__)
 
 
 class INSDCSubmission2INSDCRunAssociation(pydantic.BaseModel):
@@ -43,21 +49,43 @@ class INSDCSubmission2INSDCRunAssociation(pydantic.BaseModel):
 
 class ENAAPIPortalINSDCSubmissionMappingService(MappingService):
     @classmethod
-    def prepare_request(cls, accessions: INSDCSubmissionSet, **kwargs) -> httpx.Request:
+    def prepare_request(
+        cls,
+        request_service: ENAAPIPortalRequestService,
+        accessions: INSDCSubmissionSet,
+        **kwargs,
+    ) -> httpx.Request:
         """"""
-        return httpx.Request(
+        # The ENA API does not currently accept accessions of type 'submission'.
+        # Seems an error to me.
+        result = request_service.client.build_request(
             method="POST",
             url="search",
             data={
                 "dataPortal": "ena",
                 "fields": ",".join(INSDCSubmission2INSDCRunAssociation.__fields__),
                 "format": "json",
-                "includeAccessionType": "submission",
-                "includeAccessions": ",".join(sorted(accessions)),
+                "query": " OR ".join(
+                    [f'submission_accession="{acc}"' for acc in accessions]
+                ),
                 "limit": 0,
                 "result": "read_run",
             },
         )
+        # result = request_service.client.build_request(
+        #     method="POST",
+        #     url="search",
+        #     data={
+        #         "dataPortal": "ena",
+        #         "fields": ",".join(INSDCSubmission2INSDCRunAssociation.__fields__),
+        #         "format": "json",
+        #         "includeAccessionType": "submission",
+        #         "includeAccessions": ",".join(sorted(accessions)),
+        #         "limit": 0,
+        #         "result": "read_run",
+        #     },
+        # )
+        return result
 
     @classmethod
     def parse_run_set(
@@ -67,7 +95,12 @@ class ENAAPIPortalINSDCSubmissionMappingService(MappingService):
         mapping = parse_obj_as(
             List[INSDCSubmission2INSDCRunAssociation], response.json()
         )
-        assert {m.submission_accession for m in mapping} == set(accessions)
+        found = {m.submission_accession for m in mapping}
+        if found != accessions:
+            logger.error(
+                "The following sample accessions could not be mapped: %s",
+                ", ".join(accessions.difference(found)),
+            )
         return INSDCRunSet.from_accessions(
             accessions=[m.run_accession for m in mapping]
         )

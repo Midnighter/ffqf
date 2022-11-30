@@ -75,3 +75,6 @@ class AbstractAccessionSet(ABC):
     def update(self, accessions: Iterable[str]) -> None:
         for acc in accessions:
             self.add(acc)
+
+    def difference(self, other: Iterable[str]) -> AbstractAccessionSet:
+        return self.from_accessions(self._accessions.difference(other))

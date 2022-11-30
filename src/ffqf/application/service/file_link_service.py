@@ -8,17 +8,15 @@ from ffqf.domain.model import INSDCRunSet, RunInformation
 from .request_service import RequestService
 
 
-class RunInformationService(ABC):
+class FileLinkService(ABC):
     @classmethod
     @abstractmethod
-    def prepare_request(
+    async def prepare_request(
         cls, request_service: RequestService, run_set: INSDCRunSet, **kwargs
     ) -> httpx.Request:
         """"""
 
     @classmethod
     @abstractmethod
-    def parse_run_info(
-        cls, response: httpx.Response, run_set: INSDCRunSet
-    ) -> List[RunInformation]:
+    def parse_file_links(cls, response: httpx.Response, run_set: INSDCRunSet) -> List:
         """"""

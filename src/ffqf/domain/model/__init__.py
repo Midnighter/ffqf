@@ -25,6 +25,7 @@
 from .abstract_accession_set import AbstractAccessionSet
 from .bio_sample_set import BioSampleSet
 from .bio_project_set import BioProjectSet
+from .file_description import FileDescription, URLType
 from .run_information import RunInformation
 from .insdc_sample_set import INSDCSampleSet
 from .insdc_experiment_set import INSDCExperimentSet

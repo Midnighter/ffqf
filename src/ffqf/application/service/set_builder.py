@@ -1,4 +1,3 @@
-import logging
 import re
 from typing import Iterable
 
@@ -13,15 +12,8 @@ from ffqf.domain.model import (
 )
 
 
-logger = logging.getLogger(__name__)
-
-
 class SetBuilder:
 
-    recognized_accession = re.compile(
-        r"^(((SR|ER|DR)[APRSX])|(SAM(N|EA|EG|D))|(PRJ(NA|EB|DB))|(GS[EM]))(\d+)$",
-        flags=re.ASCII,
-    )
     BIO_PROJECT_PREFIX = "PRJ"
     BIO_SAMPLE_PREFIX = "SAM"
     study_pattern = re.compile(r"^(SR|ER|DR)P")
@@ -44,9 +36,6 @@ class SetBuilder:
     def from_accessions(self, accessions: Iterable[str]):
         """"""
         for acc in accessions:
-            if not self.recognized_accession.match(acc):
-                logger.error("Invalid or unrecognized accession '%s'. Ignored.", acc)
-
             if acc.startswith(self.BIO_PROJECT_PREFIX):
                 self.bio_projects.add(acc)
             elif acc.startswith(self.BIO_SAMPLE_PREFIX):

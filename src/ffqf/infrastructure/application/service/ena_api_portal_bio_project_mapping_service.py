@@ -31,6 +31,8 @@ from pydantic import parse_obj_as
 from ffqf.application.service import MappingService
 from ffqf.domain.model import BioProjectSet, INSDCRunSet
 
+from .ena_api_portal_request_service import ENAAPIPortalRequestService
+
 
 class BioProject2INSDCRunAssociation(pydantic.BaseModel):
 
@@ -43,9 +45,14 @@ class BioProject2INSDCRunAssociation(pydantic.BaseModel):
 
 class ENAAPIPortalBioProjectMappingService(MappingService):
     @classmethod
-    def prepare_request(cls, accessions: BioProjectSet, **kwargs) -> httpx.Request:
+    def prepare_request(
+        cls,
+        request_service: ENAAPIPortalRequestService,
+        accessions: BioProjectSet,
+        **kwargs
+    ) -> httpx.Request:
         """"""
-        return httpx.Request(
+        return request_service.client.build_request(
             method="POST",
             url="search",
             data={
@@ -65,7 +72,7 @@ class ENAAPIPortalBioProjectMappingService(MappingService):
     ) -> INSDCRunSet:
         response.raise_for_status()
         mapping = parse_obj_as(List[BioProject2INSDCRunAssociation], response.json())
-        assert {m.study_accession for m in mapping} == set(accessions)
+        assert {m.study_accession for m in mapping} == accessions
         return INSDCRunSet.from_accessions(
             accessions=[m.run_accession for m in mapping]
         )

@@ -22,6 +22,7 @@
 # SOFTWARE.
 
 
+import logging
 from typing import List
 
 import httpx
@@ -30,6 +31,11 @@ from pydantic import parse_obj_as
 
 from ffqf.application.service import MappingService
 from ffqf.domain.model import INSDCSampleSet, INSDCRunSet
+
+from .ena_api_portal_request_service import ENAAPIPortalRequestService
+
+
+logger = logging.getLogger(__name__)
 
 
 class INSDCSample2INSDCRunAssociation(pydantic.BaseModel):
@@ -43,9 +49,14 @@ class INSDCSample2INSDCRunAssociation(pydantic.BaseModel):
 
 class ENAAPIPortalINSDCSampleMappingService(MappingService):
     @classmethod
-    def prepare_request(cls, accessions: INSDCSampleSet, **kwargs) -> httpx.Request:
+    def prepare_request(
+        cls,
+        request_service: ENAAPIPortalRequestService,
+        accessions: INSDCSampleSet,
+        **kwargs,
+    ) -> httpx.Request:
         """"""
-        return httpx.Request(
+        return request_service.client.build_request(
             method="POST",
             url="search",
             data={
@@ -66,7 +77,12 @@ class ENAAPIPortalINSDCSampleMappingService(MappingService):
     ) -> INSDCRunSet:
         response.raise_for_status()
         mapping = parse_obj_as(List[INSDCSample2INSDCRunAssociation], response.json())
-        assert {m.secondary_sample_accession for m in mapping} == set(accessions)
+        found = {m.secondary_sample_accession for m in mapping}
+        if found != accessions:
+            logger.error(
+                "The following sample accessions could not be mapped: %s",
+                ", ".join(accessions.difference(found)),
+            )
         return INSDCRunSet.from_accessions(
             accessions=[m.run_accession for m in mapping]
         )

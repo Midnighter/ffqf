@@ -1,6 +1,6 @@
 # Find FASTQ FASTA
 
-_Find FASTQ and FASTA files faster than with ffq._
+_Find FASTQ faster than ffq._
 
 ## Copyright
 

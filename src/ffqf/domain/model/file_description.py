@@ -22,24 +22,30 @@
 # SOFTWARE.
 
 
-from typing import List
+import enum
+from typing import Optional
 
 import pydantic
 
-from .file_description import FileDescription
+
+class URLType(str, enum.Enum):
+
+    FTP = "ftp"
+    NCBI = "ncbi"
+    AWS = "aws"
+    GCP = "gcp"
+    EBI = "ebi"
 
 
-class RunInformation(pydantic.BaseModel):
+class FileDescription(pydantic.BaseModel):
 
-    run_accession: str
-    experiment_accession: str
-    sample_accession: str
-    secondary_sample_accession: str
-    submission_accession: str
-    study_accession: str
-    secondary_study_accession: str
-    files: List[FileDescription] = pydantic.Field(default_factory=lambda: [])
+    name: str
+    type: str
+    size: int
+    md5: str
+    url: pydantic.AnyUrl
+    urltype: URLType
+    zone: Optional[str]
 
     class Config:
-        extra = pydantic.Extra.allow
         frozen = True
