@@ -1,4 +1,4 @@
-# Find FASTQ FASTA
+# Find FASTQ Faster
 
 _Find FASTQ faster than ffq._
 
