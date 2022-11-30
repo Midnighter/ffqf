@@ -4,11 +4,11 @@ from typing import Iterable
 from ffqf.domain.model import (
     BioProjectSet,
     BioSampleSet,
-    INSDCStudySet,
-    INSDCSampleSet,
     INSDCExperimentSet,
-    INSDCSubmissionSet,
     INSDCRunSet,
+    INSDCSampleSet,
+    INSDCStudySet,
+    INSDCSubmissionSet,
 )
 
 

@@ -1,4 +1,4 @@
-from pydantic import HttpUrl, EmailStr
+from pydantic import EmailStr, HttpUrl
 
 from ffqf.application.service import APISettings
 

@@ -29,7 +29,7 @@ import pydantic
 from pydantic import parse_obj_as
 
 from ffqf.application.service import MappingService
-from ffqf.domain.model import INSDCStudySet, INSDCRunSet
+from ffqf.domain.model import INSDCRunSet, INSDCStudySet
 
 from .ena_api_portal_request_service import ENAAPIPortalRequestService
 

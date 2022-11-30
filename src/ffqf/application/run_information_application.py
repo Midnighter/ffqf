@@ -1,16 +1,20 @@
 import logging
 from functools import partial
-from typing import List, Iterable, Type, Dict
+from typing import Dict, Iterable, List, Type
 
 import anyio
 import httpx
 
+from ffqf.domain.model import FileDescription, INSDCRunSet, RunInformation
+
 from .service import (
+    FileLinkService,
     MappingService,
+    RequestService,
     RunInformationService,
+    SetBuilder,
 )
-from .service import SetBuilder, RequestService, FileLinkService
-from ffqf.domain.model import RunInformation, INSDCRunSet, FileDescription
+
 
 logger = logging.getLogger(__name__)
 

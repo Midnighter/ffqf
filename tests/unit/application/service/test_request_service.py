@@ -4,7 +4,7 @@ from typing import List
 import aiometer
 import httpx
 
-from ffqf.application.service import RequestService, APISettings
+from ffqf.application.service import APISettings, RequestService
 
 
 class HTTPService(RequestService):

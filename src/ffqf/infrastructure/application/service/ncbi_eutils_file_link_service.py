@@ -1,12 +1,13 @@
 import logging
 import re
-from typing import List, Dict
+from typing import Dict, List
 
 import httpx
 from lxml import etree
 
 from ffqf.application.service import FileLinkService
-from ffqf.domain.model import INSDCRunSet, FileDescription, URLType
+from ffqf.domain.model import FileDescription, INSDCRunSet, URLType
+
 from .ncbi_eutils_request_service import NCBIEutilsRequestService
 
 

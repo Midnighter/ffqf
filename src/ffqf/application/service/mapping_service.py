@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import httpx
 
-from ffqf.domain.model import INSDCRunSet, AbstractAccessionSet
+from ffqf.domain.model import AbstractAccessionSet, INSDCRunSet
 
 from .request_service import RequestService
 

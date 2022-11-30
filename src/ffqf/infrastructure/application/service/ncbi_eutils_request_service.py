@@ -5,6 +5,7 @@ import aiometer
 import httpx
 
 from ffqf.application.service import RequestService
+
 from .ncbi_eutils_settings import NCBIEutilsSettings
 
 

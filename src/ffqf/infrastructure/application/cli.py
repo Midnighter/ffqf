@@ -2,7 +2,7 @@ import logging
 import re
 import sys
 from enum import Enum, unique
-from typing import Optional, List, Collection
+from typing import Collection, List, Optional
 
 import anyio
 import typer
@@ -12,13 +12,13 @@ from ffqf.application import RunInformationApplication
 from ffqf.infrastructure.application.service import (
     ENAAPIPortalBioProjectMappingService,
     ENAAPIPortalBioSampleMappingService,
-    ENAAPIPortalINSDCStudyMappingService,
-    ENAAPIPortalINSDCSampleMappingService,
     ENAAPIPortalINSDCExperimentMappingService,
+    ENAAPIPortalINSDCSampleMappingService,
+    ENAAPIPortalINSDCStudyMappingService,
     ENAAPIPortalINSDCSubmissionMappingService,
-    NCBIEutilsFileLinkService,
     ENAAPIPortalRequestService,
     ENAAPIPortalRunInformationService,
+    NCBIEutilsFileLinkService,
     NCBIEutilsRequestService,
 )
 from ffqf.infrastructure.application.service.ena_api_portal_settings import (
@@ -27,6 +27,7 @@ from ffqf.infrastructure.application.service.ena_api_portal_settings import (
 from ffqf.infrastructure.application.service.ncbi_eutils_settings import (
     NCBIEutilsSettings,
 )
+
 
 logger = logging.getLogger("ffqf")
 

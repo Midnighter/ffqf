@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Coroutine, Any
+from typing import Any, Coroutine, List
 
 import httpx
 

@@ -5,6 +5,7 @@ import aiometer
 import httpx
 
 from ffqf.application.service import RequestService
+
 from .ena_api_portal_settings import ENAAPIPortalSettings
 
 
