@@ -47,7 +47,7 @@ class BioProjectSet(AbstractAccessionSet):
 
     """
 
-    _project_accession: ClassVar[Pattern] = re.compile(
+    _validation_pattern: ClassVar[Pattern] = re.compile(
         r"^(PRJ(NA|EB|DB))(\d+)$",
         flags=re.ASCII,
     )

@@ -34,7 +34,7 @@ from .abstract_accession_set import AbstractAccessionSet
 class BioSampleSet(AbstractAccessionSet):
     """ """
 
-    _project_accession: ClassVar[Pattern] = re.compile(
+    _validation_pattern: ClassVar[Pattern] = re.compile(
         r"^(SAM(N|EA|EG|D))(\d+)$",
         flags=re.ASCII,
     )
