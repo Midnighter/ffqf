@@ -28,7 +28,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import ClassVar, Iterable, Pattern, Set
+from typing import ClassVar, Iterable, Pattern, Set, Union
 
 
 class AbstractAccessionSet(ABC):
@@ -51,6 +51,19 @@ class AbstractAccessionSet(ABC):
     def __iter__(self) -> Iterable[str]:
         """"""
         return iter(self._accessions)
+
+    def __contains__(self, accession: str) -> bool:
+        """"""
+        return accession in self._accessions
+
+    def __len__(self) -> int:
+        return len(self._accessions)
+
+    def __eq__(self, other: Union[AbstractAccessionSet, Set]) -> bool:
+        if isinstance(other, AbstractAccessionSet):
+            return other._accessions == self._accessions
+        else:
+            return other == self._accessions
 
     def add(self, accession: str) -> None:
         """"""
