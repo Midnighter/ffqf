@@ -5,4 +5,4 @@ class APISettings(BaseSettings):
 
     api_url: HttpUrl
     concurrency: int
-    timeout: int = 20
+    timeout: int = 30
