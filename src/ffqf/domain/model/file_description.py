@@ -45,7 +45,7 @@ class FileDescription(pydantic.BaseModel):
     md5: str
     url: pydantic.AnyUrl
     urltype: URLType
-    zone: Optional[str]
+    region: Optional[str]
 
     class Config:
         frozen = True

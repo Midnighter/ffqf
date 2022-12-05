@@ -54,10 +54,10 @@ class NCBIEutilsFileLinkService(FileLinkService):
             files = []
             for sra_file in run.iter("SRAFile"):  # type: etree._Element
                 for alt in sra_file.iter("Alternatives"):  # type: etree._Element
-                    zone = None
+                    region = None
                     for scheme, location in clouds:
                         if alt.get("url").startswith(scheme):
-                            zone = location
+                            region = location
                     if alt.get("url").endswith("bam"):
                         file_type = "bam"
                     elif fastq_pattern.search(alt.get("url")):
@@ -72,7 +72,7 @@ class NCBIEutilsFileLinkService(FileLinkService):
                             md5=sra_file.get("md5"),
                             url=alt.get("url"),
                             urltype=URLType(alt.get("org").lower()),
-                            zone=zone,
+                            region=region,
                         )
                     )
                 # run["total_spots"],
