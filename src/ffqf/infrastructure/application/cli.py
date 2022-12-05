@@ -18,13 +18,9 @@ from ffqf.infrastructure.application.service import (
     ENAAPIPortalINSDCSubmissionMappingService,
     ENAAPIPortalRequestService,
     ENAAPIPortalRunInformationService,
+    ENAAPIPortalSettings,
     NCBIEutilsFileLinkService,
     NCBIEutilsRequestService,
-)
-from ffqf.infrastructure.application.service.ena_api_portal_settings import (
-    ENAAPIPortalSettings,
-)
-from ffqf.infrastructure.application.service.ncbi_eutils_settings import (
     NCBIEutilsSettings,
 )
 
