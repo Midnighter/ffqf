@@ -172,7 +172,6 @@ class RunInformationApplication:
             group.start_soon(self._wrap_file_links, [ncbi_request], runs, file_links)
         for run in run_info:
             run.files.extend(file_links.get(run.run_accession, []))
-            print(run.json(indent=2))
         return run_info
 
     async def _wrap_run_info(

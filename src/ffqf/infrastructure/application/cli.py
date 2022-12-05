@@ -2,6 +2,7 @@ import logging
 import re
 import sys
 from enum import Enum, unique
+from pathlib import Path
 from typing import Collection, List, Optional
 
 import anyio
@@ -22,6 +23,8 @@ from ffqf.infrastructure.application.service import (
     NCBIEutilsFileLinkService,
     NCBIEutilsRequestService,
     NCBIEutilsSettings,
+    RunInformationJSONOutputWriter,
+    RunInformationTableOutputWriter,
 )
 
 
@@ -37,6 +40,15 @@ class LogLevel(str, Enum):
     WARNING = "WARNING"
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
+
+
+@unique
+class OutputFormat(str, Enum):
+    """Define the choices for the output format option."""
+
+    TSV = "TSV"
+    CSV = "CSV"
+    JSON = "JSON"
 
 
 app = typer.Typer(
@@ -80,10 +92,24 @@ def main(
         help="Any number of valid accessions.",
         show_default=False,
     ),
-    email: Optional[str] = typer.Option(
+    email: Optional[str] = typer.Option(  # noqa: B008
         ...,
         help="The email address to use to identify with the NCBI E-utilities.",
         show_default=False,
+    ),
+    output: Optional[Path] = typer.Option(  # noqa: B008
+        None,
+        "--output",
+        "-o",
+        help="If you want to write the result to a file instead of to stdout. The file "
+        "extension is used to determine the format if none is specified explicitly.",
+        show_default=False,
+    ),
+    output_format: OutputFormat = typer.Option(  # noqa: B008
+        default=OutputFormat.JSON,
+        help="Explicitly set the output format; applies to stdout or file output.",
+        case_sensitive=False,
+        show_default=True,
     ),
     version: Optional[bool] = typer.Option(  # noqa: B008
         None,
@@ -99,14 +125,6 @@ def main(
         case_sensitive=False,
         help="Set the desired log level.",
     ),
-    # output: Path = typer.Option(  # noqa: B008
-    #     ...,
-    #     "--output",
-    #     "-o",
-    #     help="The desired output file. By default, the file extension will be used to "
-    #     "determine the output format.",
-    #     show_default=False,
-    # ),
 ):
     """
     Either pass a number of accessions as arguments or pipe them into stdin with one
@@ -145,4 +163,10 @@ def main(
         ena_request_service=ena_requests,
         ncbi_request_service=ncbi_requests,
     )
-    anyio.run(run_info_app.run, accessions)
+    result = anyio.run(run_info_app.run, accessions)
+    if output_format is OutputFormat.JSON:
+        RunInformationJSONOutputWriter.write(result, output)
+    elif output_format is OutputFormat.TSV:
+        RunInformationTableOutputWriter.write(result, output)
+    elif output_format is OutputFormat.CSV:
+        RunInformationTableOutputWriter.write(result, output, dialect="excel")
