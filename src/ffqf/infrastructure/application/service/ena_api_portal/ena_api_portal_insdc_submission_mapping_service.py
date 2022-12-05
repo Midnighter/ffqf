@@ -98,7 +98,7 @@ class ENAAPIPortalINSDCSubmissionMappingService(MappingService):
         found = {m.submission_accession for m in mapping}
         if found != accessions:
             logger.error(
-                "The following sample accessions could not be mapped: %s",
+                "The following submission accessions could not be mapped: %s",
                 ", ".join(accessions.difference(found)),
             )
         return INSDCRunSet.from_accessions(
