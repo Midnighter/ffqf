@@ -56,8 +56,6 @@ class ENAAPIPortalINSDCSubmissionMappingService(MappingService):
         **kwargs,
     ) -> httpx.Request:
         """"""
-        # The ENA API does not currently accept accessions of type 'submission'.
-        # Seems an error to me.
         result = request_service.client.build_request(
             method="POST",
             url="search",
@@ -65,26 +63,12 @@ class ENAAPIPortalINSDCSubmissionMappingService(MappingService):
                 "dataPortal": "ena",
                 "fields": ",".join(INSDCSubmission2INSDCRunAssociation.__fields__),
                 "format": "json",
-                "query": " OR ".join(
-                    [f'submission_accession="{acc}"' for acc in accessions]
-                ),
+                "includeAccessionType": "submission",
+                "includeAccessions": ",".join(sorted(accessions)),
                 "limit": 0,
                 "result": "read_run",
             },
         )
-        # result = request_service.client.build_request(
-        #     method="POST",
-        #     url="search",
-        #     data={
-        #         "dataPortal": "ena",
-        #         "fields": ",".join(INSDCSubmission2INSDCRunAssociation.__fields__),
-        #         "format": "json",
-        #         "includeAccessionType": "submission",
-        #         "includeAccessions": ",".join(sorted(accessions)),
-        #         "limit": 0,
-        #         "result": "read_run",
-        #     },
-        # )
         return result
 
     @classmethod
